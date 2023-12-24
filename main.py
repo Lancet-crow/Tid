@@ -1,6 +1,6 @@
 import pygame
 
-from Tid.start_screen import start_screen
+from start_screen import start_screen
 
 pygame.init()
 size = width, height = 1920, 1080
