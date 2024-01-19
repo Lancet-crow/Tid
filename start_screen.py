@@ -1,9 +1,7 @@
 import sys
 from os import path
-
-import pygame
-
 from load_resources import load_image
+from main import *
 
 
 BG_ANIMATE_TIMER = pygame.USEREVENT + 1
