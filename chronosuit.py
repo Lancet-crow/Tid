@@ -1,7 +1,3 @@
-import pygame
-import sys
-
-
 # хронокостюм
 class Chronosuit:
     maximum_rate = 10  # максимальный ход времени
