@@ -1,59 +1,61 @@
-from math import sqrt
+import math
+from random import randrange
 
 import pygame
 
-pygame.init()
-
-# from main import *
-
-run = True
-clocker = pygame.time.Clock()
-screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN, pygame.RESIZABLE)
+from making_resources import load_image
 
 
-class TimeBranch(pygame.sprite.Sprite):
-    def __init__(self, pos, x, y):
-        pygame.sprite.Sprite.__init__(self)
+class SpriteObject(pygame.sprite.Sprite):
+    def __init__(self, x, y, image):
+        super().__init__()
+        self.image = image
+        self.rect = self.image.get_rect(center=(x, y))
+        self.mask = pygame.mask.from_surface(self.image)
+
+    def update(self):
+        self.rect.center = pygame.mouse.get_pos()
 
 
-class Dot(pygame.sprite.Sprite):
+class Line(pygame.sprite.Sprite):
     def __init__(self, x, y):
-        pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.surface.Surface((5, 5))  # точка 5x5
-        self.image.fill((255, 255, 255))  # закрасить черным цветом
+        super().__init__()
+        self.image = pygame.Surface((200, 200))
+        self.image.set_colorkey((0, 0, 0))
+        self.rect = self.image.get_rect(center=(x, y))
+        self.angle = 0
+
+    def update(self):
+        vec = round(math.cos(self.angle * math.pi / 180) * 100), round(math.sin(self.angle * math.pi / 180) * 100)
+        self.angle = (self.angle + 1) % 360
+        self.image.fill(0)
+        pygame.draw.line(self.image, (223, 171, 255), (100 - vec[0], 100 - vec[1]), (100 + vec[0], 100 + vec[1]), 5)
+        self.mask = pygame.mask.from_surface(self.image)
+
+
+class MainBranch(pygame.sprite.Sprite):
+    def __init__(self, x, y, screen):
+        super().__init__()
+        self.image = load_image("main_branch.png", screen)
+        self.rect = self.image.get_rect(center=(x, y))
+
+    def update(self):
+        self.mask = pygame.mask.from_surface(self.image)
+
+
+class Branch(pygame.sprite.Sprite):
+    def __init__(self, x, y, screen):
+        super().__init__()
+        self.image = load_image("good_branch.png", screen)
+        self.screen = screen
         self.rect = self.image.get_rect()
-        self.rect.centerx = x  # центр по x
-        self.rect.centery = y  # центр по y
+        self.rect.topleft = x, y + randrange(-50, 50)
 
+    def colliding_other(self, group):
+        return any(self.rect.colliderect(branch.rect) for branch in group if self != branch)
 
-def Calc(func):
-    i = -10  # начальное значение аргумента
-    while i <= 10:  # пока аргумент меньше 10
-        mass = ""  # темп-строка
-        for j in func:  # для каждого символа в строке func(наша функция)
-            if j == "x":  # если символ = x, то добавляем i в темп-строку
-                mass += str(i)
-            else:  # если нет, то добавить исходный символ
-                mass += j
-            i += 0.0001  # увеличить аргумент на 0.0001
-        try:
-            res1 = eval(mass)  # посчитать функцию и получить результат
-        except:
-            res1 = 10000  # если функцию нельзя посчитать, то результат число вне координат(знаю, костыль)
-        dot = Dot(250 + i * 10,
-                  250 - res1 * 10)  # dot - точка с координатой(0+x,0+y), так как это дисплей, то вектор "y"
-        # направлен вниз
-        all_sprites.add(dot)  # добавить точку в группу спрайтов
+    def update(self):
+        self.mask = pygame.mask.from_surface(self.image)
 
-
-all_sprites = pygame.sprite.Group()
-Calc("y = sqrt(x) ** (4/5)")
-
-while run:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            run = False
-    screen.fill((0, 0, 0))
-    all_sprites.draw(screen, None)
-    pygame.display.flip()
-pygame.quit()
+    def rewriting_to_bad(self):
+        self.image = load_image("bad_branch.png", self.screen)

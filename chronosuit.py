@@ -24,7 +24,6 @@ class Chronosuit:
 
         return internal
 
-
     @classmethod
     def increases_counter_renames(cls):
         cls.counter_of_usages += 1
