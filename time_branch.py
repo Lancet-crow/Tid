@@ -1,61 +1,60 @@
-import math
-from random import randrange
+import random
 
 import pygame
 
-from making_resources import load_image
+
+class DragOperator:
+    def __init__(self, sprite):
+        self.sprite = sprite
+        self.dragging = False
+        self.rel_pos = (0, 0)
+
+    def update(self, event_list):
+        self.mouse_coordinates = pygame.mouse.get_pos()
+        if self.rect.collidepoint(self.mouse_coordinates):
+            self.rect.centerx = self.mouse_coordinates[0]
+            self.rect.centery = self.mouse_coordinates[1]
 
 
-class SpriteObject(pygame.sprite.Sprite):
-    def __init__(self, x, y, image):
+
+class Point(pygame.sprite.Sprite):
+    def __init__(self, x, y):
         super().__init__()
-        self.image = image
+        self.image = pygame.Surface((100, 100))
+        self.x, self.y = x, y
+        self.image.set_colorkey((0, 0, 0))
         self.rect = self.image.get_rect(center=(x, y))
-        self.mask = pygame.mask.from_surface(self.image)
 
     def update(self):
-        self.rect.center = pygame.mouse.get_pos()
+        pygame.draw.circle(self.image, (255, 255, 255), self.rect.center, 50)
 
 
 class Line(pygame.sprite.Sprite):
-    def __init__(self, x, y):
+    def __init__(self, p1, p2):
         super().__init__()
-        self.image = pygame.Surface((200, 200))
+        self.image = pygame.Surface((1920, 1080))
         self.image.set_colorkey((0, 0, 0))
-        self.rect = self.image.get_rect(center=(x, y))
-        self.angle = 0
-
-    def update(self):
-        vec = round(math.cos(self.angle * math.pi / 180) * 100), round(math.sin(self.angle * math.pi / 180) * 100)
-        self.angle = (self.angle + 1) % 360
-        self.image.fill(0)
-        pygame.draw.line(self.image, (223, 171, 255), (100 - vec[0], 100 - vec[1]), (100 + vec[0], 100 + vec[1]), 5)
-        self.mask = pygame.mask.from_surface(self.image)
-
-
-class MainBranch(pygame.sprite.Sprite):
-    def __init__(self, x, y, screen):
-        super().__init__()
-        self.image = load_image("main_branch.png", screen)
-        self.rect = self.image.get_rect(center=(x, y))
-
-    def update(self):
-        self.mask = pygame.mask.from_surface(self.image)
-
-
-class Branch(pygame.sprite.Sprite):
-    def __init__(self, x, y, screen):
-        super().__init__()
-        self.image = load_image("good_branch.png", screen)
-        self.screen = screen
+        self.p1, self.p2 = p1, p2
         self.rect = self.image.get_rect()
-        self.rect.topleft = x, y + randrange(-50, 50)
+        self.drag = DragOperator(self)
 
-    def colliding_other(self, group):
-        return any(self.rect.colliderect(branch.rect) for branch in group if self != branch)
+    def update(self, event_list):
+        self.mouse_coordinates = pygame.mouse.get_pos()
+        if self.rect.collidepoint(self.mouse_coordinates):
+            self.rect.centerx = self.mouse_coordinates[0]
+            self.rect.centery = self.mouse_coordinates[1]
 
-    def update(self):
-        self.mask = pygame.mask.from_surface(self.image)
+        pygame.draw.line(self.image, (255, 255, 255), self.p1.rect.center, self.p2.rect.center, 20)
 
-    def rewriting_to_bad(self):
-        self.image = load_image("bad_branch.png", self.screen)
+
+class LevelBranches:
+    def __init__(self, points):
+        points_list = []
+        self.lines_list = []
+        for i in range(points):
+            points_list.append(Point(random.randrange(100, 1900), random.randrange(100, 1000)))
+        for i in range(len(points_list)):
+            self.lines_list.append(Line(points_list[i], points_list[i + 1 if i + 1 < len(points_list) else 0]))
+
+    def get_lines(self):
+        return self.lines_list
