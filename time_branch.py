@@ -3,6 +3,17 @@ import random
 import pygame
 
 
+def line_intersection(line1, line2):
+    xdiff = (line1[0][0] - line1[1][0], line2[0][0] - line2[1][0])
+    ydiff = (line1[0][1] - line1[1][1], line2[0][1] - line2[1][1])
+
+    def det(a, b):
+        return a[0] * b[1] - a[1] * b[0]
+
+    div = det(xdiff, ydiff)
+    return div != 0
+
+
 class DragOperator:
     def __init__(self, sprite):
         self.sprite = sprite
@@ -11,10 +22,9 @@ class DragOperator:
 
     def update(self, event_list):
         self.mouse_coordinates = pygame.mouse.get_pos()
-        if self.rect.collidepoint(self.mouse_coordinates):
-            self.rect.centerx = self.mouse_coordinates[0]
-            self.rect.centery = self.mouse_coordinates[1]
-
+        if self.sprite.rect.collidepoint(self.mouse_coordinates):
+            self.sprite.rect.centerx = self.mouse_coordinates[0]
+            self.sprite.rect.centery = self.mouse_coordinates[1]
 
 
 class Point(pygame.sprite.Sprite):

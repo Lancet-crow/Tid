@@ -11,6 +11,7 @@ class StartScreen:
     def __init__(self, screen, clock, fps):
         BG_ANIMATE_TIMER = pygame.USEREVENT + 1
         item_bg = 0
+        a = 1
         self.screen = screen
         pygame.time.set_timer(BG_ANIMATE_TIMER, 1000)
         WIDTH, HEIGHT = self.screen.get_size()
