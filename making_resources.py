@@ -30,10 +30,9 @@ class CustomSprite(pygame.sprite.Sprite):
 
 
 class ButtonSprite(CustomSprite):
-    def __init__(self, filename, screen, top_left_coords):
+    def __init__(self, filename, screen, top_left_coords, scene):
         super().__init__(filename, screen, top_left_coords)
-        from level_menu import buttons
-        buttons.add(self)
+        scene.buttons.add(self)
         self.filename = filename
         self.clicked = False
 

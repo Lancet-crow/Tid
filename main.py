@@ -2,7 +2,6 @@ import pygame
 
 import music_player
 import start_screen
-from chronosuit import Chronosuit
 from general_methods_for_screens import terminate
 
 pygame.init()

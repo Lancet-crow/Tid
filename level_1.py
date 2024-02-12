@@ -1,52 +1,51 @@
-from operator import attrgetter
-
 import pygame
 
+from time_anomaly import web_generation, update_lines
 from general_methods_for_screens import terminate
 from making_resources import load_image
-import time_branch
 
 
 class LevelOne:
     def __init__(self, screen, clock, fps):
         WIDTH, HEIGHT = screen.get_size()
-        running = True
         self.screen = screen
         fon = pygame.transform.scale(load_image('level_1.jpg', self.screen), (WIDTH, HEIGHT))
-        # moving_object = SpriteObject(0, 0, load_image("button_sprite_level_3.png", screen).convert_alpha())
-        # line_object = Line(*screen.get_rect().center)
-        all_branches = pygame.sprite.Group(*time_branch.LevelBranches(5).get_lines())
+        lines = []
+        points = []
+        web_generation(15, screen, points, lines)
+        moving = False
+        moving_object = None
+        winning_position = False
+        running = True
         while running:
             event_list = pygame.event.get()
             for event in event_list:
                 if event.type == pygame.QUIT:
                     running = False
-                elif event.type == pygame.MOUSEBUTTONDOWN:
-                    sprites = []
-                    for sprite in all_branches:
-                        if sprite.rect.collidepoint(event.pos):
-                            sprites.append(sprite)
-                    try:
-                        active = min(sprites, key=attrgetter('rect'))
-                    except ValueError:
-                        active = None
-                        print('Empty place selected, so sprite list is empty')
-                    mouse_held = True
-                    if mouse_held:
-                        try:
-                            active.update(event_list)
-                        except UnboundLocalError:
-                            print(
-                                'active not set, to due to previous exception')
-            all_branches.update(event_list)
-            # for branch in good_branches:
-            #     if branch.colliding_other(good_branches):
-            #         bad_branches.add(branch)
-            #         good_branches.remove(branch)
-            #         branch.rewriting_to_bad()
-
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        for i in points:
+                            if (i.pos_x - i.radius < event.pos[0] < i.pos_x + i.radius
+                                    and i.pos_y - i.radius < event.pos[1] < i.pos_y + i.radius):
+                                moving_object = i
+                                moving = True
+                if event.type == pygame.MOUSEMOTION:
+                    if moving:
+                        x_move, y_move = event.rel
+                        moving_object.pos_x += x_move
+                        moving_object.pos_y += y_move
+                        moving_object.change_color(moving=True)
+                if event.type == pygame.MOUSEBUTTONUP:
+                    if event.button == 1:
+                        if moving:
+                            moving_object.change_color(moving=False)
+                        moving = False
+                        moving_object = None
             self.screen.blit(fon, (0, 0))
-            all_branches.draw(screen)
+            winning_position = update_lines(lines, points)
+            if winning_position:
+                print("Winning position is found!")
+            running = not winning_position
             pygame.display.flip()
             clock.tick(fps)
         terminate()

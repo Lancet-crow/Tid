@@ -2,7 +2,6 @@ from os import path
 
 import pygame
 
-import level_menu
 from general_methods_for_screens import terminate
 from making_resources import load_image
 
@@ -25,7 +24,9 @@ class StartScreen:
                 if event.type == pygame.QUIT:
                     running = False
                 elif event.type == pygame.MOUSEBUTTONDOWN:
-                    level_menu.LevelMenu(screen, clock, fps)
+                    running = False
+                    from level_menu import LevelMenu
+                    LevelMenu(screen, clock, fps)
                 elif event.type == BG_ANIMATE_TIMER:
                     if item_bg == 11 and a == 1:
                         pygame.time.set_timer(BG_ANIMATE_TIMER, 0)
