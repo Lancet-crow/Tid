@@ -32,7 +32,7 @@ class CustomSprite(pygame.sprite.Sprite):
 class ButtonSprite(CustomSprite):
     def __init__(self, filename, screen, top_left_coords, scene):
         super().__init__(filename, screen, top_left_coords)
-        scene.buttons.add(self)
+        scene.append(self)
         self.filename = filename
         self.clicked = False
 
@@ -41,7 +41,5 @@ class ButtonSprite(CustomSprite):
             self.clicked = not self.clicked
             print(self.filename, "is pushed!", self.clicked)
         if self.clicked:
-            from main import screen, clock, FPS
-            if self.filename == "button_sprite_level_1.png":
-                from level_1 import LevelOne
-                LevelOne(screen, clock, FPS)
+            return self.filename[14:-4]
+        return None

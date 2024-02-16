@@ -4,13 +4,14 @@ from time_anomaly import web_generation, update_lines
 from general_methods_for_screens import terminate
 from making_resources import load_image
 
-def level_one(screen, clock, fps):
+
+def level_three(screen, clock, fps):
     WIDTH, HEIGHT = screen.get_size()
     screen = screen
-    fon = pygame.transform.scale(load_image('level_1.jpg', screen), (WIDTH, HEIGHT))
+    fon = pygame.transform.scale(load_image('level_3.jpg', screen), (WIDTH, HEIGHT))
     lines = []
     points = []
-    web_generation(15, screen, points, lines)
+    web_generation(25, screen, points, lines)
     moving = False
     moving_object = None
     running = True
