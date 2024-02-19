@@ -16,7 +16,7 @@ def level_menu(screen, clock, fps):
             if event.type == pygame.QUIT:
                 running = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                running = False
+                # running = False
                 for button in buttons:
                     clicked = button.update(event)
                     if clicked is not None:
