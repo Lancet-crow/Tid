@@ -9,6 +9,7 @@ FPS = 60
 clock = pygame.time.Clock()
 running = True
 scene = "start_screen"
+passed_levels = [6]
 
 music_player.load_level_music('main')
 
@@ -25,15 +26,14 @@ while running:
     elif scene == "level_menu":
         from level_menu import level_menu
         scene = level_menu(screen, clock, FPS)
-    elif scene == "level_1":
-        from level_1 import level_one
-        scene = level_one(screen, clock, FPS)
-    elif scene == "level_2":
-        from level_2 import level_two
-        scene = level_two(screen, clock, FPS)
-    elif scene == "level_2":
-        from level_3 import level_three
-        scene = level_three(screen, clock, FPS)
+    elif "level_" in scene:
+        from level import level
+        scene = level(screen, clock, FPS, int(scene[-1]))
+        passed_levels.append(int(scene[-1]))
+    if sum(passed_levels) == 6:
+        from finish_game import finish_screen
+        finish_screen(screen, clock, FPS)
+        running = False
     pygame.display.flip()
     clock.tick(FPS)
 music_player.quit_game_fix()

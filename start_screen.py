@@ -10,7 +10,6 @@ def start_screen(screen, clock, fps):
     BG_ANIMATE_TIMER = pygame.USEREVENT + 1
     item_bg = 0
     a = 1
-    screen = screen
     pygame.time.set_timer(BG_ANIMATE_TIMER, 1000)
     WIDTH, HEIGHT = screen.get_size()
     running = True
@@ -23,7 +22,6 @@ def start_screen(screen, clock, fps):
             if event.type == pygame.QUIT:
                 running = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                running = False
                 return "level_menu"
             elif event.type == BG_ANIMATE_TIMER:
                 if item_bg == 11 and a == 1:
@@ -41,6 +39,7 @@ def start_screen(screen, clock, fps):
         pygame.display.flip()
         clock.tick(fps)
     terminate()
+
 
 def bg_blit(screen, item_bg, WIDTH, HEIGHT):
     fon = pygame.transform.scale(load_image(f'start_screen_background_{item_bg}.png', screen), (WIDTH, HEIGHT))

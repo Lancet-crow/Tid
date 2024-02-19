@@ -39,7 +39,6 @@ class ButtonSprite(CustomSprite):
     def update(self, event):
         if self.rect.collidepoint(event.pos):
             self.clicked = not self.clicked
-            print(self.filename, "is pushed!", self.clicked)
         if self.clicked:
             return self.filename[14:-4]
         return None
