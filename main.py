@@ -9,12 +9,10 @@ FPS = 60
 clock = pygame.time.Clock()
 running = True
 scene = "start_screen"
-passed_levels = []
+passed_levels = [6]
 blocked_levels = [2, 3]
 
 music_player.load_level_music('main')
-
-# time_changer = Chronosuit()
 
 
 while running:
@@ -28,10 +26,8 @@ while running:
         from level_menu import level_menu
         scene = level_menu(screen, clock, FPS)
     elif "level_" in scene:
-        print(scene)
         level_id = int(scene[-1])
         if level_id not in blocked_levels:
-            print(level_id not in blocked_levels)
             from level import level
             scene = level(screen, clock, FPS, level_id)
             passed_levels.append(level_id)
@@ -49,5 +45,4 @@ while running:
         running = False
     pygame.display.flip()
     clock.tick(FPS)
-music_player.quit_game_fix()
 terminate()

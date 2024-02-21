@@ -1,7 +1,6 @@
 import pygame
 
 from time_anomaly import web_generation, update_lines
-from general_methods_for_screens import terminate
 from making_resources import load_image
 
 
@@ -23,6 +22,7 @@ def level(screen, clock, fps, level_id):
             if event.type == pygame.QUIT:
                 running = False
             if event.type == FINISH_LEVEL_TIMER:
+                pygame.time.set_timer(FINISH_LEVEL_TIMER, 0)
                 return "level_menu"
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
@@ -50,4 +50,3 @@ def level(screen, clock, fps, level_id):
             pygame.time.set_timer(FINISH_LEVEL_TIMER, 5000)
         pygame.display.flip()
         clock.tick(fps)
-    terminate()

@@ -8,7 +8,7 @@ def load_level_music(level_name):
     if not mixer.get_init():
         mixer.init()
     music.load(f"./data/audio/{LEVEL_MUSIC[level_name]}")
-    music.play()
+    music.play(loops=-1)
 
 
 def quit_game_fix():
