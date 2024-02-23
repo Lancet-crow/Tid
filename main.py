@@ -9,7 +9,7 @@ FPS = 60
 clock = pygame.time.Clock()
 running = True
 scene = "start_screen"
-passed_levels = [6]
+passed_levels = [0]
 blocked_levels = [2, 3]
 
 music_player.load_level_music('main')
